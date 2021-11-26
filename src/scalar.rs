@@ -7,6 +7,7 @@ use core::{
     fmt,
     ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign},
 };
+use std::iter::{Product, Sum};
 
 use blst::*;
 use byte_slice_cast::AsByteSlice;
@@ -289,6 +290,18 @@ impl MulAssign<&Scalar> for Scalar {
     #[inline]
     fn mul_assign(&mut self, rhs: &Scalar) {
         unsafe { blst_fr_mul(&mut self.0, &self.0, &rhs.0) };
+    }
+}
+
+impl Sum<Scalar> for Scalar {
+    fn sum<I: Iterator<Item = Scalar>>(iter: I) -> Self {
+        iter.fold(Scalar::zero(), |sum, v| sum + v)
+    }
+}
+
+impl<'a> Product<&'a Scalar> for Scalar {
+    fn product<I: Iterator<Item = &'a Scalar>>(iter: I) -> Self {
+        iter.fold(Scalar::one(), |product, v| product * v)
     }
 }
 
