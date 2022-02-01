@@ -35,4 +35,3 @@ default = ["serde"]
 portable = ["blst/portable"]
 gpu = ["ec-gpu"]
 __private_bench = []
-
